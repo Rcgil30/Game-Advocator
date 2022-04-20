@@ -1,1 +1,5 @@
-# Game-Advocator
+# Play It
+
+## Integrantes
+Roberto Gil
+Esteban Perez
