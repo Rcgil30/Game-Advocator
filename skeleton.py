@@ -47,8 +47,9 @@ class Selections():
 
 class GameDatabase():
     #Database with all the games to use for classification
-    def __init__(self) -> None:
-        pass
+    def __init__(self, list_of_games: list[Games]) -> None:
+        #We will acces the database of games with an API and get them here
+        self.list_of_games = list_of_games
 
 class Classifier(ClassificationAlgorithm):
     def __init__(self, dtb: GameDatabase, selections: Selections) -> None:

@@ -1,7 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 
+#Lists later to be used for the user selections
 GenreList = []
+PlatformsList = []
 
 #Function to show the main menu to the user
 def MainMenu():

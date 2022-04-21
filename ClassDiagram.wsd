@@ -1,0 +1,61 @@
+@startuml ClassDiagram
+
+'Definition of classes
+
+'Recommendation will hold the final games shown to the user
+class "Recommendation" as Rec {
+    'This list of games are the ones used in the graphic interface 
+    result: list[Games]
+}
+
+'This class will get the acces to all the information of our database
+'Which will be accesed by an API and is in the JSON format
+class "GameDatabase" as Dtb {
+    list_of_games: list[Games] 
+}
+
+'Classifier will be the class in which everything materializes and gather
+'the steps done by the other classes
+class Classifier {
+}
+
+'Selections will get and hold the information that the user inputs
+class Selections {
+    genre: list[str]
+    platforms: list[str]
+    developer: str
+    diff: float
+    void getInfo(interface: Interface) -> None
+}
+
+'abstract class to define the method used to classify the information
+'and get the final result shown to the user
+abstract class "ClassificationAlgorithm" as Knn{
+    {abstract} similars(selections: Selections, dtb: GameDatabase) -> list[Games]
+}
+
+abstract class Attributes {
+    {abstract} id: int
+    {abstract} title: str
+    {abstract} cover: str
+    {abstract} release_year: int
+    {abstract} gender: str
+    {abstract} diff: float
+    {abstract} platform: list[str]
+    {abstract} developer: str
+
+}
+class Games{
+    inDatabase(dtb: GameDatabase) -> bool
+}
+
+'Relationships
+
+Selections "1" *- "1" Classifier: Uses Attributes <
+Knn <|-- Classifier
+Classifier "1" *-Down- "1" Rec: Gets Recommendation >
+Dtb *-U- Classifier
+Dtb "   1   " -U-o  "0...*" Games: Contains >
+Attributes <|-U- Games
+
+@enduml
