@@ -1,7 +1,7 @@
 # Play It
 
 ## Integrantes
-Roberto Gil
+Roberto Gil\n
 Esteban Perez
 
 #UML Diagram
