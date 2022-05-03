@@ -1,10 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
+from skeleton import *
+
 
 # Lists later to be used for the user selections
-GenreList = []
-PlatformsList = []
-SwitchesList = []
+GenreList = ["Action", "Adventure", "Coop", "Fighting",
+             "Fps", "Horror", "Party", "Rpg", "Strategy", "Survival"]
+PlatformsList = ["Pc", "PlayStation", "Xbox", "Switch"]
+SwitchesList: list[tk.BooleanVar] = []
+GenreSelections = []
 
 # Function to show the main menu to the user
 
@@ -57,26 +61,33 @@ def Menu2():
     CoopButton = ttk.Checkbutton(canva, text="Coop", variable=swCoop)
     CoopButton.place(x=190, y=330)
     swFighting = tk.BooleanVar()
+    SwitchesList.append(swFighting)
     FightingButton = ttk.Checkbutton(
         canva, text="Fighting", variable=swFighting)
     FightingButton.place(x=190, y=370)
     swFps = tk.BooleanVar()
-    FpsButton = ttk.Checkbutton(canva, text="Coop", variable=swFps)
+    SwitchesList.append(swFps)
+    FpsButton = ttk.Checkbutton(canva, text="Fps", variable=swFps)
     FpsButton.place(x=190, y=410)
     swHorror = tk.BooleanVar()
+    SwitchesList.append(swHorror)
     HorrorButton = ttk.Checkbutton(canva, text="Horror", variable=swHorror)
     HorrorButton.place(x=190, y=450)
     swParty = tk.BooleanVar()
+    SwitchesList.append(swParty)
     PartyButton = ttk.Checkbutton(canva, text="Party", variable=swParty)
     PartyButton.place(x=190, y=490)
     swRpg = tk.BooleanVar()
+    SwitchesList.append(swRpg)
     RpgButton = ttk.Checkbutton(canva, text="Rpg", variable=swRpg)
     RpgButton.place(x=190, y=530)
     swStrategy = tk.BooleanVar()
+    SwitchesList.append(swStrategy)
     StrategyButton = ttk.Checkbutton(
         canva, text="Strategy", variable=swStrategy)
     StrategyButton.place(x=190, y=570)
     swSurvival = tk.BooleanVar()
+    SwitchesList.append(swSurvival)
     SurvivalButton = ttk.Checkbutton(
         canva, text="Survival", variable=swSurvival)
     SurvivalButton.place(x=190, y=570)
@@ -120,6 +131,10 @@ def getInfo():
     After getting this information, it will lead the user to the 3rd menu, which will show the final
     results that we get from the process mentioned earlier.
     """
+    for i in range(len(SwitchesList)):
+        if(SwitchesList[i].get):
+            GenreSelections.append(GenreList[i])
+    print(GenreSelections)
     menu3()
 
 
