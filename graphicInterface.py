@@ -1,14 +1,12 @@
+from this import d
 import tkinter as tk
 from tkinter import ttk
 from skeleton import *
 
-
-# Lists later to be used for the user selections
-GenreList = ["Action", "Adventure", "Coop", "Fighting",
-             "Fps", "Horror", "Party", "Rpg", "Strategy", "Survival"]
-PlatformsList = ["Pc", "PlayStation", "Xbox", "Switch"]
-SwitchesList: list[tk.BooleanVar] = []
-GenreSelections = []
+Ow = Games(2, "OVERWATCH", "", 2016, "Action", [
+           "PlayStation", "Pc", "Xbox"], "Blizzard")
+provisional = [Ow]
+database = GameDatabase(provisional)
 
 # Function to show the main menu to the user
 
@@ -21,7 +19,7 @@ def MainMenu():
     bglabel = tk.Label(app, image=bg)
     bglabel.pack()
     # This button makes you switch to the next menu
-    mainbutton = tk.Button(app, text="Start", width=20,
+    mainbutton = tk.Button(app, text="Play", width=20,
                            height=3, command=Menu2, bg="#F55A51", font=100)
     mainbutton.place(x=540, y=565)
 
@@ -40,54 +38,57 @@ def Menu2():
     backButton = tk.Button(canva, image=backImage, height=40, width=40, bd=1,
                            relief="flat", overrelief="raised", bg="#FFCBB4", command=MainMenu)
     backButton.place(x=10, y=670)
+    global swAction, swAdventure, swCoop, swFighting, swFps
+    global swHorror, swParty, swPc, swPst, swRpg, swSurvival
+    global swStrategy, swSwitch, swXbox, difficulty, developerEntry
+
     # Switch that determines if a checkbutton is selected
     swAction = tk.BooleanVar()
-    SwitchesList.append(swAction)
     # We create a button with every Genre to allow the user to click a bunch of them, so that they
     # can select multiple genres, generating then a list of genres, this will happen in the button to
     # show the results
     ActionButton = ttk.Checkbutton(canva, text="Action", variable=swAction)
     ActionButton.place(x=190, y=250)
+
     swAdventure = tk.BooleanVar()
-    SwitchesList.append(swAdventure)
     # We build each button with the text of the Genre name and de variable that determines
     # If it is selected or not, which we'll use then to get the elements of the list
     AdventureButton = ttk.Checkbutton(
         canva, text="Adventure", variable=swAdventure)
     # With the place method, we get the buttons in a specific pixel of the window
     AdventureButton.place(x=190, y=290)
+
     swCoop = tk.BooleanVar()
-    SwitchesList.append(swCoop)
     CoopButton = ttk.Checkbutton(canva, text="Coop", variable=swCoop)
     CoopButton.place(x=190, y=330)
+
     swFighting = tk.BooleanVar()
-    SwitchesList.append(swFighting)
     FightingButton = ttk.Checkbutton(
         canva, text="Fighting", variable=swFighting)
     FightingButton.place(x=190, y=370)
+
     swFps = tk.BooleanVar()
-    SwitchesList.append(swFps)
     FpsButton = ttk.Checkbutton(canva, text="Fps", variable=swFps)
     FpsButton.place(x=190, y=410)
+
     swHorror = tk.BooleanVar()
-    SwitchesList.append(swHorror)
     HorrorButton = ttk.Checkbutton(canva, text="Horror", variable=swHorror)
     HorrorButton.place(x=190, y=450)
+
     swParty = tk.BooleanVar()
-    SwitchesList.append(swParty)
     PartyButton = ttk.Checkbutton(canva, text="Party", variable=swParty)
     PartyButton.place(x=190, y=490)
+
     swRpg = tk.BooleanVar()
-    SwitchesList.append(swRpg)
     RpgButton = ttk.Checkbutton(canva, text="Rpg", variable=swRpg)
     RpgButton.place(x=190, y=530)
+
     swStrategy = tk.BooleanVar()
-    SwitchesList.append(swStrategy)
     StrategyButton = ttk.Checkbutton(
         canva, text="Strategy", variable=swStrategy)
     StrategyButton.place(x=190, y=570)
+
     swSurvival = tk.BooleanVar()
-    SwitchesList.append(swSurvival)
     SurvivalButton = ttk.Checkbutton(
         canva, text="Survival", variable=swSurvival)
     SurvivalButton.place(x=190, y=570)
@@ -97,26 +98,30 @@ def Menu2():
     swPc = tk.BooleanVar()
     PcButton = ttk.Checkbutton(
         canva, text="Pc", variable=swPc)
-    PcButton.place(x=410, y=250)
+    PcButton.place(x=435, y=250)
     swPst = tk.BooleanVar()
     PstButton = ttk.Checkbutton(
         canva, text="PlayStation", variable=swPst)
-    PstButton.place(x=410, y=290)
+    PstButton.place(x=435, y=290)
     swXbox = tk.BooleanVar()
     XboxButton = ttk.Checkbutton(
         canva, text="Xbox", variable=swXbox)
-    XboxButton.place(x=410, y=330)
+    XboxButton.place(x=435, y=330)
     swSwitch = tk.BooleanVar()
     SwitchButton = ttk.Checkbutton(
         canva, text="Nintendo Switch", variable=swSwitch)
-    SwitchButton.place(x=410, y=370)
+    SwitchButton.place(x=435, y=370)
 
     # Now we create the scale for the difficulty
-    difficulty = tk.DoubleVar()
+    difficulty = tk.IntVar()
     diffScale = tk.Scale(canva, variable=difficulty,
-                         from_=0, to=5, orient=tk.HORIZONTAL, bg="#44089B", bd=1,
-                         relief="flat")
-    diffScale.place(x=820, y=210)
+                         from_=0, to=10, orient=tk.HORIZONTAL, bg="#FFCBB4", bd=1,
+                         relief="flat", font=40, width=20)
+    diffScale.place(x=700, y=260)
+
+    developerEntry = tk.Entry(
+        canva, width=15, bg="#FFFFFF", fg="#44089B", font=50)
+    developerEntry.place(x=930, y=260)
 
     # Finally, we define the button to advance to gather the info and show the final results
     ResultsButton = tk.Button(canva, text="Get Recommendations",
@@ -125,21 +130,59 @@ def Menu2():
 
 
 def getInfo():
-    """
-    In this part of the code, we will implement the selections class from the skeleton to gather the
-    information and store it in an object from that class, so that it can be used them for the classifier.
-    After getting this information, it will lead the user to the 3rd menu, which will show the final
-    results that we get from the process mentioned earlier.
-    """
-    for i in range(len(SwitchesList)):
-        if(SwitchesList[i].get):
-            GenreSelections.append(GenreList[i])
-    print(GenreSelections)
+    # This lists are used to get the selections from the user
+    genreselection = []
+    platformselection = []
+    switchasignment(genreselection=genreselection,
+                    platformselection=platformselection)
+    diffselection = difficulty.get()
+    dev = developerEntry.get()
+    global UserSelections
+    UserSelections = Selections(
+        genre=genreselection, platforms=platformselection, diff=diffselection, developer=dev.upper())
     menu3()
 
 
+def switchasignment(genreselection: list[str], platformselection: list[str]):
+    """Function to assign the selections by the user to 2 lists, later to be used to build the selections object"""
+
+    # Assignment of switches for the genre category
+    if (swAction.get()):
+        genreselection.append("Action")
+    if (swAdventure.get()):
+        genreselection.append("Adventure")
+    if (swCoop.get()):
+        genreselection.append("Coop")
+    if (swFighting.get()):
+        genreselection.append("Fighting")
+    if (swFps.get()):
+        genreselection.append("Fps")
+    if (swHorror.get()):
+        genreselection.append("Horror")
+    if (swParty.get()):
+        genreselection.append("Party")
+    if (swRpg.get()):
+        genreselection.append("Rpg")
+    if (swStrategy.get()):
+        genreselection.append("Strategy")
+    if (swSurvival.get()):
+        genreselection.append("Survival")
+
+    # Assignment of switches to the platforms category
+    if (swPc.get()):
+        platformselection.append("Pc")
+    if (swPst.get()):
+        platformselection.append("PlayStation")
+    if (swSwitch.get()):
+        platformselection.append("Switch")
+    if (swXbox.get()):
+        platformselection.append("Xbox")
+
+
 def menu3():
-    pass
+
+    classifier = Classifier(selections=UserSelections, dtb=database)
+    results = classifier.similars()
 
 
 # Defining the root or master of our app

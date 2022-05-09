@@ -1,6 +1,3 @@
-from abc import ABC
-from typing import overload
-
 
 class Attributes():
     # Abstract class to define the attributes of each game
@@ -33,23 +30,16 @@ class Games(Attributes):
         pass
 
 
-class ClassificationAlgorithm(ABC):
-    # Definition of classification Metho
-    def similars(self):
-        ...
-
-
 class Selections():
     # Constructor for user inputs
-    def __init__(self, genre: list[str], platforms: list[str], developer: str, diff: float) -> None:
+    def __init__(self, genre: list[str], platforms: list[str], developer: str, diff: int) -> None:
         self.Usergenre = genre
         self.Userplatforms = platforms
         self.Userdeveloper = developer
         self.Userdiff = diff
 
-    # Method to get the information from the user's inputs
-    def getinfo():
-        pass
+    def __repr__(self) -> str:
+        return f"genres: {self.Usergenre} \nplatforms: {self.Userplatforms} \ndeveloper: {self.Userdeveloper} \ndifficulty: {self.Userdiff}"
 
 
 class GameDatabase():
@@ -59,16 +49,15 @@ class GameDatabase():
         self.list_of_games = list_of_games
 
 
-class Classifier(ClassificationAlgorithm):
+class Classifier():
     def __init__(self, dtb: GameDatabase, selections: Selections) -> None:
         self.dtb = dtb
         self.selections = selections
         self.result = None
 
-    @overload
     # Implementation of Classification Method
     def similars(self) -> list[Games]:
-        pass
+        return []
 
 
 class Recommedation:
