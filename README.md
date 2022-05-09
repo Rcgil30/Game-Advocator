@@ -1,6 +1,6 @@
 # Play It
 
-## Integrantes
+## Members
 Roberto Gil
 
 Esteban Perez
