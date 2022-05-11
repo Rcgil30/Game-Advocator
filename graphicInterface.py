@@ -1,16 +1,9 @@
-from this import d
 import tkinter as tk
 from tkinter import ttk
 from skeleton import *
 
-Ow = Games(2, "OVERWATCH", "", 2016, "Action", [
-           "PlayStation", "Pc", "Xbox"], "Blizzard")
-provisional = [Ow]
-database = GameDatabase(provisional)
 
 # Function to show the main menu to the user
-
-
 def MainMenu():
     # Reset the window by destroying previous widgets
     for ele in app.winfo_children():
@@ -19,25 +12,45 @@ def MainMenu():
     bglabel = tk.Label(app, image=bg)
     bglabel.pack()
     # This button makes you switch to the next menu
-    mainbutton = tk.Button(app, text="Play", width=20,
-                           height=3, command=Menu2, bg="#F55A51", font=100)
-    mainbutton.place(x=540, y=565)
+    mainbutton = tk.Button(app, image=mainbImage, command=Menu2, bg="#44089B", bd=1,
+                           relief="flat", overrelief="raised")
+    mainbutton.place(x=520, y=565)
+    # This button takes you back to the credits menu
+    creditsbutton = tk.Button(app, image=creditsImage, bd=1,
+                              relief="flat", overrelief="raised", bg="#00A89A", command=CreditsMenu)
+    creditsbutton.place(x=15, y=20)
+
+
+def CreditsMenu():
+    # Clears the app
+    for ele in app.winfo_children():
+        ele.destroy()
+    canvac = tk.Canvas(app)
+    canvac.pack()
+    # Label to show the credits background
+    bgclabel = tk.Label(canvac, image=bgc)
+    bgclabel.pack()
+    # Button that takes you back to the main menu
+    backcbutton = tk.Button(canvac, image=backImage2, bd=1, relief="flat",
+                            overrelief="raised", bg="#00A89A", command=MainMenu)
+    backcbutton.place(x=10, y=670)
 
 
 def Menu2():
     # For loop to clear all the widgets from the root, so that we can start with the next menu
     for ele in app.winfo_children():
         ele.destroy()
-    # Making a button to go back to the main menu
     # In this canva we will show all the elements for the next menu
     canva = tk.Canvas(app)
     canva.pack()
     # Label to show the background for the second menu
     bg2label = tk.Label(canva, image=bg2)
     bg2label.pack()
+    # Making a button to go back to the main menu
     backButton = tk.Button(canva, image=backImage, height=40, width=40, bd=1,
                            relief="flat", overrelief="raised", bg="#FFCBB4", command=MainMenu)
     backButton.place(x=10, y=670)
+    # Making this global variables so that they can be used for the gathering of the selections in the getInfo method
     global swAction, swAdventure, swCoop, swFighting, swFps
     global swHorror, swParty, swPc, swPst, swRpg, swSurvival
     global swStrategy, swSwitch, swXbox, difficulty, developerEntry
@@ -124,8 +137,8 @@ def Menu2():
     developerEntry.place(x=930, y=260)
 
     # Finally, we define the button to advance to gather the info and show the final results
-    ResultsButton = tk.Button(canva, text="Get Recommendations",
-                              bg="#F55A51", height=3, width=20, command=getInfo, font=100)
+    ResultsButton = tk.Button(canva, image=recoImage, command=getInfo, bg="#FFCBB4", bd=1,
+                              relief="flat", overrelief="raised")
     ResultsButton.place(x=540, y=565)
 
 
@@ -140,6 +153,7 @@ def getInfo():
     global UserSelections
     UserSelections = Selections(
         genre=genreselection, platforms=platformselection, diff=diffselection, developer=dev.upper())
+    print(UserSelections)
     menu3()
 
 
@@ -180,9 +194,15 @@ def switchasignment(genreselection: list[str], platformselection: list[str]):
 
 
 def menu3():
-
-    classifier = Classifier(selections=UserSelections, dtb=database)
-    results = classifier.similars()
+    for ele in app.winfo_children():
+        ele.destroy()
+    canva2 = tk.Canvas(app)
+    canva2.pack()
+    bg3label = tk.Label(canva2, image=bg3)
+    bg3label.pack()
+    backButton = tk.Button(canva2, image=backImage, height=40, width=40, bd=1,
+                           relief="flat", overrelief="raised", bg="#FFCBB4", command=Menu2)
+    backButton.place(x=10, y=670)
 
 
 # Defining the root or master of our app
@@ -192,9 +212,16 @@ app.geometry("1280x720+120+65")
 # We set the window to not be resizable so that the image is not distorted
 app.resizable(False, False)
 app.title("Play It")
+# Here we load all the images into PhotoImage variables
 bg = tk.PhotoImage(file="bin\Play it.png")
 bg2 = tk.PhotoImage(file="bin\Inputs menu.png")
-backImage = tk.PhotoImage(file="bin\Boton regresar.png")
+bg3 = tk.PhotoImage(file="bin\Results menu.png")
+backImage = tk.PhotoImage(file="bin\Back button.png")
+backImage2 = tk.PhotoImage(file="bin\Back button 2.png")
+creditsImage = tk.PhotoImage(file="bin\Credits button.png")
+mainbImage = tk.PhotoImage(file="bin\Main button.png")
+recoImage = tk.PhotoImage(file="bin\Recommendation Button.png")
+bgc = tk.PhotoImage(file="bin\Credits menu.png")
 MainMenu()
 
 app.mainloop()

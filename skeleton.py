@@ -57,7 +57,7 @@ class Classifier():
 
     # Implementation of Classification Method
     def similars(self) -> list[Games]:
-        return []
+        pass
 
 
 class Recommedation:
