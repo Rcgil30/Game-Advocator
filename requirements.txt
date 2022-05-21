@@ -1,0 +1,9 @@
+pip install gql[all]
+pip install Pillow
+python version: 3.10.2 64-bit
+
+
+For the usage of the app, you will need to open the terminal and install gql[all], as mentioned in the first line,
+this is for the fetching of the database.
+You also may need to install Pillow in the terminal, as in pip install Pillow, to get the images from the urls.
+Finally, if you find problems of missing imports, changing the python interpreter may solve it.

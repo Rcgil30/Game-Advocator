@@ -4,19 +4,28 @@
 
 'Recommendation will hold the final games shown to the user
 class "Recommendation" as Rec {
-    'This list of games are the ones used in the graphic interface 
+    'This list of games are the ones used in the graphic interface
     result: list[Games]
 }
 
-'This class will get the acces to all the information of our database
-'Which will be accesed by an API and is in the JSON format
+
 class "GameDatabase" as Dtb {
-    list_of_games: list[Games] 
+    'This is the list of all games in the database
+    listofgames: list[Games]
 }
 
-'Classifier will be the class in which everything materializes and gather
+'Classifier will be the class in which everything materializes and gathers
 'the steps done by the other classes
 class Classifier {
+    selections: Selections
+    database: Dtb
+    collections: Collections
+    similars() -> list[Games]
+
+}
+
+class Collections {
+
 }
 
 'Selections will get and hold the information that the user inputs
@@ -24,15 +33,10 @@ class Selections {
     genre: list[str]
     platforms: list[str]
     developer: str
-    diff: float
+    diff: int
     void getInfo(interface: Interface) -> None
 }
 
-'abstract class to define the method used to classify the information
-'and get the final result shown to the user
-abstract class "ClassificationAlgorithm" as Knn{
-    {abstract} similars(selections: Selections, dtb: GameDatabase) -> list[Games]
-}
 
 abstract class Attributes {
     {abstract} id: int
@@ -52,10 +56,10 @@ class Games{
 'Relationships
 
 Selections "1" *- "1" Classifier: Uses Attributes <
-Knn <|-- Classifier
-Classifier "1" *-Down- "1" Rec: Gets Recommendation >
+Classifier "1 " *-Down- "1 " Rec: Gets Recommendation >
 Dtb *-U- Classifier
-Dtb "   1   " -U-o  "0...*" Games: Contains >
+Dtb "1      " -U-o  "0...*" Games: Contains >
 Attributes <|-U- Games
+Collections "1 " *-- "1 "Classifier: Uses to hold information <
 
 @enduml
