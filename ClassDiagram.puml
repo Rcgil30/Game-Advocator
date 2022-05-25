@@ -20,26 +20,32 @@ class Classifier {
     selections: Selections
     database: Dtb
     collections: Collections
+    'Titles of the reccomendations
+    first: str
+    second: str
+    third: str
     similars() -> list[Games]
+    getTitles() -> list[str]
 
 }
 
 class Collections {
-
+    counts: list[int]
+    titles: list[str]
+    rawdata: list[str]
 }
 
 'Selections will get and hold the information that the user inputs
 class Selections {
-    genre: list[str]
-    platforms: list[str]
-    developer: str
-    diff: int
-    void getInfo(interface: Interface) -> None
+    Usergenre: list[str]
+    Userplatforms: list[str]
+    Userdeveloper: str
+    Userdiff: int
 }
 
 
 abstract class Attributes {
-    {abstract} id: int
+    {abstract} id: str
     {abstract} title: str
     {abstract} cover: str
     {abstract} release_year: int
@@ -50,6 +56,8 @@ abstract class Attributes {
 
 }
 class Games{
+    shop: str
+    diff: int
     inDatabase(dtb: GameDatabase) -> bool
 }
 

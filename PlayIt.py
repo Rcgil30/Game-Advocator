@@ -65,19 +65,22 @@ class Attributes():
 
 
 class GameDatabase():
-    # Database with all the games to use for classification
-    def __init__(self) -> None:
+    """Class that loads all the games of the database into a list"""
+
+    def __init__(self, listofgames: list) -> None:
+        # Holder to separate the platforms, as games usually have more than 1
         gameplatform = []
-        self.listofgames = []
+        self.listofgames = listofgames
+        # result hold all the information (dictionaries) from the database
         result = client.execute(query)
+        # for loop to iterate through each game of the database
         for game in result.get('games'):
+            # Clearing the gameplatformlistfor every
             gameplatform.clear()
             for i in range(len(game.get("platform"))):
                 gameplatform.append(game.get("platform")[i].get("name"))
-            games = {"id": game.get("id"), "title": game.get("title"),
-                     "portada": game.get("portada"), "developer": game.get("developer"),
-                     "releaseYear": game.get("releaseYear"),
-                     "gender": game.get("gender").get("name"), "platform": gameplatform[0:], "shop": game.get("shop"), "diff": game.get("diff")}
+            games = Games(game.get("id"), game.get("title"), game.get("portada"), game.get("releaseYear"), game.get("gender"),
+                          gameplatform, game.get("developer"), game.get("shop"), game.get("diff"))
             self.listofgames.append(games)
 
 
@@ -85,23 +88,26 @@ class Games(Attributes):
     """Concrete class of games"""
     # Building the game using Attributes constructor
 
-    def __init__(self, id: int, title: str, cover: str,
+    def __init__(self, id: str, title: str, cover: str,
                  releaseYear: int, genre: str, platform: list[str],
-                 developer: str) -> None:
+                 developer: str, shop: str, diff: int) -> None:
         super().__init__(id, title, cover, releaseYear, genre, platform, developer)
+        self.shop = shop
+        self.diff = diff
 
     # Verifying the game is in the database
     def inDatabase(self, database: GameDatabase) -> bool:
         """Verifies if a game is on the database based on the game's title"""
         for game in database.listofgames:
-            if (self.title == game.get("title")):
+            if (self.title == game.title):
                 return True
-            if (game.get("id") == '40'):
+            if (game.id == '40'):
                 return False
 
 
 class Selections():
-    # Constructor for user inputs
+    """Class that holds the inputs from the user, which are loaded using the tkinter Interface objects"""
+
     def __init__(self, genre: list[str], platforms: list[str], developer: str, diff: int) -> None:
         self.Usergenre = genre
         self.Userplatforms = platforms
@@ -114,6 +120,7 @@ class Selections():
 
 class Collection():
     """Class to hold and filter data in the classification algorithm"""
+
     def __init__(self) -> None:
         self.counts = []
         self.titles = []
@@ -122,6 +129,7 @@ class Collection():
 
 class Classifier():
     """Class to gather all the other classes and implement the classification method"""
+
     def __init__(self, dtb: GameDatabase, selections: Selections, collection: Collection) -> None:
         self.dtb = dtb
         self.selections = selections
@@ -132,46 +140,54 @@ class Classifier():
         """Classification algorithm that returns final recommendations"""
         # The way the algorithm works is that we compare the characteristics of each game in the database
         # With the selections of the user, aggregating them an arbitrary number of times depending on how similar
-        # they are to the lists in Collections class instantiation, 
+        # they are to the lists in Collections class instantiation,
         for game in self.dtb.listofgames:
-            
-            if (game.get("gender") in self.selections.Usergenre):
-                self.col.rawdata.append(game.get("title"))
-                self.col.rawdata.append(game.get("title"))
-                self.col.rawdata.append(game.get("title"))
-                self.col.rawdata.append(game.get("title"))
+            # We add gender 4 times, because it is the most important parameter for us
+            if (game.genre in self.selections.Usergenre):
+                self.col.rawdata.append(game.title)
+                self.col.rawdata.append(game.title)
+                self.col.rawdata.append(game.title)
+                self.col.rawdata.append(game.title)
 
-            
-            for platform in game.get("platform"):
+            # Since platforms are mostly the same, and are too little, we only add them 2 times in the
+            # Calculation of the recommendations
+            for platform in game.platform:
                 if (platform in self.selections.Userplatforms):
-                    self.col.rawdata.append(game.get("title"))
-                    self.col.rawdata.append(game.get("title"))
-            
-            if (game.get("developer") == self.selections.Userdeveloper):
-                self.col.rawdata.append(game.get("title"))
-                self.col.rawdata.append(game.get("title"))
-                self.col.rawdata.append(game.get("title"))
-                self.col.rawdata.append(game.get("title"))
-        
+                    self.col.rawdata.append(game.title)
+                    self.col.rawdata.append(game.title)
 
-            diff = int(game.get("diff"))
+            # If the user puts a developer that we have in our database, we want to show them games of that
+            # Developer, so it takes a lot of priority
+            if (game.developer == self.selections.Userdeveloper):
+                self.col.rawdata.append(game.title)
+                self.col.rawdata.append(game.title)
+                self.col.rawdata.append(game.title)
+                self.col.rawdata.append(game.title)
+
+            # The game gets added 3 times if the difficulty is the same as the user´s selection,
+            # 2 times if its 1 up or down, and 1 time  if the difference is 2, else it doesn't get added
+            diff = int(game.diff)
             userdiff = self.selections.Userdiff
             if (diff == userdiff):
-                self.col.rawdata.append(game.get("title"))
-                self.col.rawdata.append(game.get("title"))
-                self.col.rawdata.append(game.get("title"))
+                self.col.rawdata.append(game.title)
+                self.col.rawdata.append(game.title)
+                self.col.rawdata.append(game.title)
             elif (userdiff + 1 == diff or userdiff - 1 == diff):
-                self.col.rawdata.append(game.get("title"))
-                self.col.rawdata.append(game.get("title"))
+                self.col.rawdata.append(game.title)
+                self.col.rawdata.append(game.title)
             elif (userdiff + 2 == diff or userdiff - 2 == diff):
-                self.col.rawdata.append(game.get("title"))
+                self.col.rawdata.append(game.title)
 
-
+        # Here we add each game in order with it's title in the titles list and the amount of times it
+        # appears in the raw data with the counts list, so the index in titles represent the same index in counts
         for title in self.col.rawdata:
             if title not in self.col.titles:
                 self.col.titles.append(title)
+                # count method searches the amount of times an object is present on a list
                 self.col.counts.append(self.col.rawdata.count(title))
 
+        # We use bubble sort to organize both lists using the counts list as reference, so that the first titles
+        # Correspond to the games that appear more in the raw data we got
         for i in range(len(self.col.counts)):
             for j in range(len(self.col.counts) - i - 1):
                 if self.col.counts[j] < self.col.counts[j + 1]:
@@ -181,27 +197,30 @@ class Classifier():
                     self.col.titles[j] = self.col.titles[j + 1]
                     self.col.counts[j + 1] = tempc
                     self.col.titles[j + 1] = tempt
-
+        # The first, second and third game's titles used as recommendation are assigned to attributes of the class
         self.first = self.col.titles[0]
         self.second = self.col.titles[1]
         self.third = self.col.titles[2]
 
+        # Finally, we itterate through all the database and find the games we got as a result, to then return them in a list
         for game in self.dtb.listofgames:
-            if game.get("title") == self.first:
+            if game.title == self.first:
                 firstgame = game
-            if game.get("title") == self.second:
+            if game.title == self.second:
                 secondgame = game
-            if game.get("title") == self.third:
+            if game.title == self.third:
                 thirdgame = game
 
         return [firstgame, secondgame, thirdgame]
-    
-    def getTitles(self):
+
+    def getTitles(self) -> list[str]:
+        """Returns list of the first 3 recommendations' titles"""
         return [self.first, self.second, self.third]
 
 
 class Recommedation:
-    # Games shown as result
+    """Calls classifier methods in construction and holds the information to be presented to the user"""
+
     def __init__(self, classifier: Classifier) -> None:
         self.results = classifier.similars()
         self.titles = classifier.getTitles()
@@ -212,7 +231,7 @@ Graphic Interface and Functionality
 """
 
 # Instantiating the database list to make the process of the app faster
-Database = GameDatabase()
+Database = GameDatabase([])
 
 
 # Function to show the main menu to the user
@@ -358,17 +377,19 @@ def getInfo():
     # This lists are used to get the selections from the user
     genreselection = []
     platformselection = []
-    switchasignment(genreselection=genreselection,
-                    platformselection=platformselection)
+    # Calling switchassignment to get the genres and plarforms selected by the user
+    switchassignment(genreselection=genreselection,
+                     platformselection=platformselection)
     diffselection = difficulty.get()
     dev = developerEntry.get()
     global UserSelections
+    # Creating the selections object with the information extracted from the database
     UserSelections = Selections(
         genre=genreselection, platforms=platformselection, diff=diffselection, developer=dev.upper())
     menu3()
 
 
-def switchasignment(genreselection: list[str], platformselection: list[str]):
+def switchassignment(genreselection: list[str], platformselection: list[str]):
     """Function to assign the selections by the user to 2 lists, later to be used to build the selections object"""
 
     # Assignment of switches for the genre category
@@ -405,43 +426,62 @@ def switchasignment(genreselection: list[str], platformselection: list[str]):
 
 
 def menu3():
+    # Clearing window
     for ele in app.winfo_children():
         ele.destroy()
     canva2 = tk.Canvas(app)
     canva2.pack()
+    # Label for the background of the results
     bg3label = tk.Label(canva2, image=bg3)
     bg3label.pack()
     backButton = tk.Button(canva2, image=backImage, height=40, width=40, bd=1,
                            relief="flat", overrelief="raised", bg="#FFCBB4", command=Menu2)
     backButton.place(x=10, y=670)
+    # Instantiating collection object that is used internally by the classification
     collection = Collection()
+    # Creating the classificator that holds all the information and has the functions that calculate the final recommendations
     classification = Classifier(
         dtb=Database, selections=UserSelections, collection=collection)
+    # Making recommendation global to be able to use it in the BuyLink methods
     global recommendation
+    # As mentioned before, Recommendation class executes the methods in classifier and holds them in its attributes
     recommendation = Recommedation(classifier=classification)
-    Title1 = tk.Label(canva2, text=recommendation.titles[0], bg="#44089B", fg="#FFCBB4", font=Font(family="Comic Sans MS", size="24"))
+    # Labels to show the names of the final recommendations
+    Title1 = tk.Label(canva2, text=recommendation.titles[0], bg="#44089B", fg="#FFCBB4", font=Font(
+        family="Comic Sans MS", size="24"))
     Title1.place(x=200, y=250)
-    Title1 = tk.Label(canva2, text=recommendation.titles[1], bg="#44089B", fg="#FFCBB4", font=Font(family="Comic Sans MS", size="24"))
+    Title1 = tk.Label(canva2, text=recommendation.titles[1], bg="#44089B", fg="#FFCBB4", font=Font(
+        family="Comic Sans MS", size="24"))
     Title1.place(x=200, y=400)
-    Title1 = tk.Label(canva2, text=recommendation.titles[2], bg="#44089B", fg="#FFCBB4", font=Font(family="Comic Sans MS", size="24"))
+    Title1 = tk.Label(canva2, text=recommendation.titles[2], bg="#44089B", fg="#FFCBB4", font=Font(
+        family="Comic Sans MS", size="24"))
     Title1.place(x=200, y=550)
-    ShopButton1 = tk.Button(canva2, text="Click aquí para comprar", bg="#44089B", fg="#FFCBB4", font=Font(family="Comic Sans MS", size="16"), command=BuyLink1)
+    # Buttons that redirect you to the page to buy each recommendation
+    ShopButton1 = tk.Button(canva2, text="Click aquí para comprar", bg="#44089B",
+                            fg="#FFCBB4", font=Font(family="Comic Sans MS", size="16"), command=BuyLink1)
     ShopButton1.place(x=800, y=250)
-    ShopButton2 = tk.Button(canva2, text="Click aquí para comprar", bg="#44089B", fg="#FFCBB4", font=Font(family="Comic Sans MS", size="16"), command=BuyLink2)
+    ShopButton2 = tk.Button(canva2, text="Click aquí para comprar", bg="#44089B",
+                            fg="#FFCBB4", font=Font(family="Comic Sans MS", size="16"), command=BuyLink2)
     ShopButton2.place(x=800, y=400)
-    ShopButton3 = tk.Button(canva2, text="Click aquí para comprar", bg="#44089B", fg="#FFCBB4", font=Font(family="Comic Sans MS", size="16"), command=BuyLink3)
+    ShopButton3 = tk.Button(canva2, text="Click aquí para comprar", bg="#44089B",
+                            fg="#FFCBB4", font=Font(family="Comic Sans MS", size="16"), command=BuyLink3)
     ShopButton3.place(x=800, y=550)
-    
-    
+
+# Each game has a link in the database fro the page to buy, which is opened in the following methods,
+# which are called as objects in the ShopButtons
+
+
 def BuyLink1():
-    webbrowser.open(recommendation.results[0].get("shop"), new=2)   
+    # webbrowser.open() opens a tab in your web browser with the link to the page specified
+    webbrowser.open(recommendation.results[0].shop, new=2)
+
 
 def BuyLink2():
-    webbrowser.open(recommendation.results[1].get("shop"), new=2)  
+    webbrowser.open(recommendation.results[1].shop, new=2)
+
 
 def BuyLink3():
-    webbrowser.open(recommendation.results[2].get("shop"), new=2)   
-    
+    webbrowser.open(recommendation.results[2].shop, new=2)
 
 
 # Defining the root or master of our app
