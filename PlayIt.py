@@ -138,14 +138,21 @@ class Classifier():
             if (game.get("gender") in self.selections.Usergenre):
                 self.col.rawdata.append(game.get("title"))
                 self.col.rawdata.append(game.get("title"))
+                self.col.rawdata.append(game.get("title"))
+                self.col.rawdata.append(game.get("title"))
 
+            
             for platform in game.get("platform"):
                 if (platform in self.selections.Userplatforms):
                     self.col.rawdata.append(game.get("title"))
-
+                    self.col.rawdata.append(game.get("title"))
+            
             if (game.get("developer") == self.selections.Userdeveloper):
                 self.col.rawdata.append(game.get("title"))
-
+                self.col.rawdata.append(game.get("title"))
+                self.col.rawdata.append(game.get("title"))
+                self.col.rawdata.append(game.get("title"))
+        
 
             diff = int(game.get("diff"))
             userdiff = self.selections.Userdiff
@@ -158,6 +165,7 @@ class Classifier():
                 self.col.rawdata.append(game.get("title"))
             elif (userdiff + 2 == diff or userdiff - 2 == diff):
                 self.col.rawdata.append(game.get("title"))
+
 
         for title in self.col.rawdata:
             if title not in self.col.titles:
@@ -365,35 +373,35 @@ def switchasignment(genreselection: list[str], platformselection: list[str]):
 
     # Assignment of switches for the genre category
     if (swAction.get()):
-        genreselection.append("Action")
+        genreselection.append("ACTION")
     if (swAdventure.get()):
-        genreselection.append("Adventure")
+        genreselection.append("ADVENTURE")
     if (swCoop.get()):
-        genreselection.append("Coop")
+        genreselection.append("COOP")
     if (swFighting.get()):
-        genreselection.append("Fighting")
+        genreselection.append("FIGHTING")
     if (swFps.get()):
-        genreselection.append("Fps")
+        genreselection.append("FPS")
     if (swHorror.get()):
-        genreselection.append("Horror")
+        genreselection.append("HORROR")
     if (swParty.get()):
-        genreselection.append("Party")
+        genreselection.append("PARTY")
     if (swRpg.get()):
-        genreselection.append("Rpg")
+        genreselection.append("RPG")
     if (swStrategy.get()):
-        genreselection.append("Strategy")
+        genreselection.append("STRATEGY")
     if (swSurvival.get()):
-        genreselection.append("Survival")
+        genreselection.append("SURVIVAL")
 
     # Assignment of switches to the platforms category
     if (swPc.get()):
-        platformselection.append("Pc")
+        platformselection.append("PC")
     if (swPst.get()):
-        platformselection.append("PlayStation")
+        platformselection.append("PLAYSTATION")
     if (swSwitch.get()):
-        platformselection.append("Switch")
+        platformselection.append("SWITCH")
     if (swXbox.get()):
-        platformselection.append("Xbox")
+        platformselection.append("XBOX")
 
 
 def menu3():
