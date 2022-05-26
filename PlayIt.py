@@ -75,12 +75,16 @@ class GameDatabase():
         result = client.execute(query)
         # for loop to iterate through each game of the database
         for game in result.get('games'):
-            # Clearing the gameplatformlistfor every
+            # Clearing the gameplatformlistfor every game
             gameplatform.clear()
-            for i in range(len(game.get("platform"))):
-                gameplatform.append(game.get("platform")[i].get("name"))
-            games = Games(game.get("id"), game.get("title"), game.get("portada"), game.get("releaseYear"), game.get("gender"),
+            # Iterating through the platforms of each game
+            for platform in game.get("platform"):
+                # Adding the platforms to the gameplatform list, which is used to construct each game
+                gameplatform.append(platform.get("name"))
+            # Building every game using the database information
+            games = Games(game.get("id"), game.get("title"), game.get("portada"), game.get("releaseYear"), game.get("gender").get("name"),
                           gameplatform, game.get("developer"), game.get("shop"), game.get("diff"))
+            # Adding the created game to the list of all games, in the format needed 
             self.listofgames.append(games)
 
 
@@ -155,7 +159,6 @@ class Classifier():
                 if (platform in self.selections.Userplatforms):
                     self.col.rawdata.append(game.title)
                     self.col.rawdata.append(game.title)
-
             # If the user puts a developer that we have in our database, we want to show them games of that
             # Developer, so it takes a lot of priority
             if (game.developer == self.selections.Userdeveloper):
@@ -177,7 +180,6 @@ class Classifier():
                 self.col.rawdata.append(game.title)
             elif (userdiff + 2 == diff or userdiff - 2 == diff):
                 self.col.rawdata.append(game.title)
-
         # Here we add each game in order with it's title in the titles list and the amount of times it
         # appears in the raw data with the counts list, so the index in titles represent the same index in counts
         for title in self.col.rawdata:
