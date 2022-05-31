@@ -1,4 +1,4 @@
-![Logo](https://github.com/Rcgil30/Play_It/blob/main/bin/logo.png)
+![Logo](https://github.com/Rcgil30/Play_It/blob/main/bin/Logo.png)
 
 ## Members
 Roberto Gil 
